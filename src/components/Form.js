@@ -83,12 +83,16 @@ class Form extends Component {
           this.setState({email: value, validateEmail: isValidating})
         }}
       />
-      <Dropdown.Native
+      <Dropdown
         label='Ihr Erbe'
         items={dropdownItems}
-        value={this.state.category || {value: ''}}
-        onChange={(item) => {
-          this.setState({category: item.target.value})
+        value={this.state.category || ''}
+        onChange={(event) => {
+          this.setState({
+            category: event.target
+              ? event.target.value
+              : event.value
+          })
         }}
       />
       <Field 
