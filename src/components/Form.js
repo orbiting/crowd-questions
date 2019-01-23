@@ -5,6 +5,9 @@ import AutosizeInput from 'react-textarea-autosize'
 import { css } from 'glamor'
 import isEmail from 'validator/lib/isEmail'
 
+import { graphql } from 'react-apollo'
+import gql from 'graphql-tag'
+
 const styles = {
  autoSize: css({
    minHeight: 40,
@@ -35,14 +38,27 @@ class Form extends Component {
     super(props);
     this.state = {
       category: null,
-      email: "",
+      email: props.data.me
+        ? props.data.me.email
+        : '',
       validateEmail: false,
       text: "",
     };
   }
 
-  render() {
+  static getDerivedStateFromProps(props, state) {
+    if (state.email) {
+      return null
+    }
+    if (props.data.me) {
+      return {
+        email: props.data.me.email
+      }
+    }
+    return null
+  }
 
+  render() {
     const dropdownItems = [
       {value: "I", text: "Immobilien"},
       {value: "B", text: "Bargeld, Einlagen, Schuldtitel"},
@@ -104,6 +120,17 @@ class Form extends Component {
     </div>
   )};
  }
+
+const query = gql`
+  query myEmail {
+    me {
+      id
+      email
+    }
+  }
+`
+const FormWithQuery = graphql(query)(Form)
+
 class Success extends Component {
   render() {
     return  (
@@ -113,6 +140,7 @@ class Success extends Component {
     )
   }
 }
+
 
 class App extends Component {
   constructor(props) {
@@ -126,7 +154,7 @@ class App extends Component {
     if (this.state.success == true){
       return <Success />
     } else {
-      return <Form 
+      return <FormWithQuery 
         onSubmit={(e) => {
           this.setState({success : true})
           }
