@@ -9,6 +9,22 @@ open http://localhost:3000/
 
 This assumes you have an «Articles» dir two levels above, e.g. `~/Code/erbschaft` and `~/Articles/article-erbschaft`.
 
+#### Development Server Env
+
+You can use a git-excluded .env file in development. Add styleguide configuration there.
+
+Bootstrap your .env file:
+
+```
+cp test/.env.example test/.env
+```
+
+The example assumes you'll have a backend running on port 5000. You'll will need to add the host of this dev app to the backends cors list:
+
+```
+CORS_WHITELIST_URL=http://localhost:3000
+```
+
 ### Deploy
 
 ```bash

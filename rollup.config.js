@@ -19,7 +19,8 @@ export default [
   external: [
     // default
     'react', 'prop-types', 'glamor',
-    '@project-r/styleguide', '@project-r/styleguide/chart'
+    '@project-r/styleguide', '@project-r/styleguide/chart',
+    'react-apollo', 'graphql-tag'
   ],
   plugins: [
     // locale && replace({
