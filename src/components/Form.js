@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 
-import {Button, Dropdown, Field, Interaction} from '@project-r/styleguide'
+import {Button, Dropdown, Field, Interaction, InlineSpinner} from '@project-r/styleguide'
 import AutosizeInput from 'react-textarea-autosize'
 import { css } from 'glamor'
 import isEmail from 'validator/lib/isEmail'
 
-import { graphql } from 'react-apollo'
+import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag'
 
 const styles = {
@@ -17,8 +17,8 @@ const styles = {
  })
 }
 
-function validateTextfield(text) {
-  if (text.length > 500) {
+function validateTextfield(content) {
+  if (content.length > 500) {
     return 'Text zu lang'
   } else {
     return null
@@ -42,7 +42,9 @@ class Form extends Component {
         ? props.data.me.email
         : '',
       validateEmail: false,
-      text: "",
+      content: "",
+      submitted: false,
+      loading: false
     };
   }
 
@@ -60,17 +62,21 @@ class Form extends Component {
 
   render() {
     const dropdownItems = [
-      {value: "I", text: "Immobilien"},
-      {value: "B", text: "Bargeld, Einlagen, Schuldtitel"},
-      {value: "A", text: "Aktien"},
-      {value: "K", text: "Anteile an kollektiven Kapitaleinlagen"}
+      {value: "REALESTATE", text: "Immobilien"},
+      {value: "CASH", text: "Bargeld, Einlagen, Schuldtitel"},
+      {value: "SHARES", text: "Aktien"},
+      {value: "COLLECTIVE_INVESTMENTS", text: "Anteile an kollektiven Kapitaleinlagen"}
     ];
 
     const email = this.state.email
     const emailInValid = validateEmailAdress(email)
-    const text = this.state.text
-    const textInValid = validateTextfield(text)
-    const textLength = 500-text.length
+    const content = this.state.content
+    const textInValid = validateTextfield(content)
+    const textLength = 500-content.length
+
+    if (this.state.submitted) {
+      return <Success />
+    }
 
    return (
     <div>
@@ -97,8 +103,8 @@ class Form extends Component {
       />
       <Field 
         label='Ihre Geschichte' 
-        error={text && textInValid}
-        value={this.state.text}
+        error={content && textInValid}
+        value={this.state.content}
         renderInput={(inputProps) => (
           <AutosizeInput
             {...styles.autoSize}
@@ -106,24 +112,36 @@ class Form extends Component {
           />
          )}
         onChange={(e) => {
-          this.setState({text: e.target.value})
+          this.setState({content: e.target.value})
         }}
       />
       <div style={{display:"flex", justifyContent: "flex-end"}}>
         <Interaction.P style={{marginTop: -15}}>{textLength}</Interaction.P>
       </div>
       <div style={{marginTop:10, display:"flex", justifyContent: "flex-end"}}>
-        <Button 
-          disabled={emailInValid || !this.state.category || textInValid || this.state.text === ""}
+      {this.state.loading ? 
+        <InlineSpinner size={26} /> 
+        :<Button 
+          disabled={emailInValid || !this.state.category || textInValid || this.state.content === ""}
           primary 
-          onClick={() => this.props.onSubmit(this.state)}
+          onClick={() => {
+            //loading-->
+            this.setState({loading: true})
+            //setTimeout(() => {
+            this.props.onSubmit(this.state.email, this.state.content, this.state.category)
+              .then(() => this.setState({ submitted: true }))
+              .catch((err) => console.error(err))
+            //}, 500)
+          }}
         >
           Senden
         </Button>
+        }
       </div>
     </div>
-  )};
- }
+  ); //return end
+ } //render end
+} //form end
 
 const query = gql`
   query myEmail {
@@ -133,41 +151,30 @@ const query = gql`
     }
   }
 `
-const FormWithQuery = graphql(query)(Form)
+const mutation = gql`
+  mutation submitStory($email: String!, $content: String!, $category: InheritanceStoryCategory! ) {
+  submitInheritanceStory(email: $email, content: $content, category: $category 
+)
+}`
+
+const FormWithQuery = compose(
+  graphql(query),
+  graphql(mutation, {
+    props: ({ mutate }) => ({
+      onSubmit: (email, content, category) =>
+        mutate({ variables: { email, content, category } })
+    })
+  })
+)(Form)
 
 class Success extends Component {
   render() {
     return  (
       <div style={{minHeight:300,display: "flex", alignItems: "center", justifyContent:"center"}}>
-        <Interaction.H3>Success!</Interaction.H3>
+        <Interaction.H3>Vielen Dank für Ihre Teilnahme.</Interaction.H3>
       </div>
     )
   }
 }
 
-
-class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      success: false,
-    };
-  }
-
-  render() {
-    if (this.state.success == true){
-      return <Success />
-    } else {
-      return <FormWithQuery 
-        onSubmit={(e) => {
-          this.setState({success : true})
-          }
-        } 
-      />
-    }
-
-  }
-
-}
-
-export default App;
+export default FormWithQuery;
