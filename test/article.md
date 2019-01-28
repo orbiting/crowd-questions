@@ -5,9 +5,9 @@ title: 'Erbschaft'
 
 <section><h6>TITLE</h6>
 
-# Erbschaft
+# Helfen Sie uns bei der Jagd nach dem Erbe
 
-Erzählen Sie uns Ihre Geschichte.
+In der Schweiz werden jährlich 60 Milliarden Franken vererbt. Doch was passiert mit diesem Vermögen? Wer erbt wie und wieso? Wir wollen Ihre Geschichte hören.
 
 Von den Trainees, 01.02.2018
 
@@ -15,10 +15,13 @@ Von den Trainees, 01.02.2018
 
 <section><h6>CENTER</h6>
 
-Er hörte leise Schritte hinter sich. Das bedeutete nichts Gutes.
+Die Erbmasse von 60 Milliarden entspricht dem Bruttoinlandprodukt der ganzen Innerschweiz – der Kantone Luzern, Uri, Obwalden, Nidwalden und Zug vereint. Vererbt wird mehrheitlich steuerfrei. In der reichen Schweiz werden Geld, Aktien, Häuser und Firmen durch Generationen hinabgereicht. Dabei gilt wie in so vielen Ländern: Ganz wenige erben ganz viel. Und frei nach Schweizerischer Tradition wird daraus ein Geheimnis gemacht.
 
-Wer würde ihm schon folgen, spät in der Nacht und dazu noch in dieser engen Gasse mitten im übel beleumundeten Hafenviertel?
+Darum brauchen wir Ihre Hilfe.
 
+Welches sind die Erbgeschichten, die wir auf keinen Fall verpassen dürfen? Haben Sie selbst geerbt oder von einer Geschichte gehört, über die wir unbedingt berichten müssen? Oder sind Sie am Ende gar eine Expertin auf dem Gebiet und können die dürftige Datenlage mit ihren Einschätzungen bereichern?
+
+Schreiben Sie uns:
 <section><h6>DYNAMIC_COMPONENT</h6>
 
 ```
@@ -31,6 +34,5 @@ Wer würde ihm schon folgen, spät in der Nacht und dazu noch in dieser engen Ga
 
 <hr /></section>
 
-Hatte einer seiner zahllosen Kollegen dieselbe Idee gehabt, ihn beobachtet und abgewartet, um ihn nun um die Früchte seiner Arbeit zu erleichtern? Oder gehörten die Schritte hinter ihm zu einem der unzähligen Gesetzeshüter dieser Stadt, und die stählerne Acht um seine Handgelenke würde gleich zuschnappen?
-
+Wir kontaktieren Sie via Mail oder Telefon und verwenden die angebenen Daten nur für diese Recherche. Indianerehrenwort.
 <hr /></section>

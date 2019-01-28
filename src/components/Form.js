@@ -25,6 +25,14 @@ function validateTextfield(content) {
   }
   }
 
+function validatePhonenumber(tel) {
+  if (tel.length > 13) {
+    return 'Nummer zu lang'
+  } else {
+    return null
+  }
+  }
+
 function validateEmailAdress(email){
  if (isEmail(email)) {
   return null
@@ -43,6 +51,7 @@ class Form extends Component {
         : '',
       validateEmail: false,
       content: "",
+      tel: "",
       submitted: false,
       loading: false
     };
@@ -61,18 +70,15 @@ class Form extends Component {
   }
 
   render() {
-    const dropdownItems = [
-      {value: "REALESTATE", text: "Immobilien"},
-      {value: "CASH", text: "Bargeld, Einlagen, Schuldtitel"},
-      {value: "SHARES", text: "Aktien"},
-      {value: "COLLECTIVE_INVESTMENTS", text: "Anteile an kollektiven Kapitaleinlagen"}
-    ];
 
     const email = this.state.email
     const emailInValid = validateEmailAdress(email)
     const content = this.state.content
     const textInValid = validateTextfield(content)
     const textLength = 500-content.length
+    const tel = this.state.tel
+    const numberLength = validatePhonenumber(tel)
+
 
     if (this.state.submitted) {
       return <Success />
@@ -89,17 +95,14 @@ class Form extends Component {
           this.setState({email: value, validateEmail: isValidating})
         }}
       />
-      <Dropdown
-        label='Ihr Erbe'
-        items={dropdownItems}
-        value={this.state.category || ''}
-        onChange={(event) => {
-          this.setState({
-            category: event.target
-              ? event.target.value
-              : event.value
-          })
-        }}
+      <Field 
+        label='Telefonnummer (freiwillig)'
+        type= "tel"
+        value={this.state.tel}
+        error={numberLength}
+        onChange = {(e, value) => {
+           this.setState({tel: value})
+         }}
       />
       <Field 
         label='Ihre Geschichte' 
