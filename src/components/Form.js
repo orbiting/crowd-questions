@@ -25,14 +25,6 @@ function validateTextfield(content) {
   }
   }
 
-function validatePhonenumber(tel) {
-  if (tel.length > 13) {
-    return 'Nummer zu lang'
-  } else {
-    return null
-  }
-  }
-
 function validateEmailAdress(email){
  if (isEmail(email)) {
   return null
@@ -76,8 +68,6 @@ class Form extends Component {
     const textInValid = validateTextfield(content)
     const textLength = 2000-content.length
     const tel = this.state.tel
-    const numberLength = validatePhonenumber(tel)
-
 
     if (this.state.submitted) {
       return <Success />
@@ -98,7 +88,6 @@ class Form extends Component {
         label='Telefonnummer (freiwillig)'
         type= "tel"
         value={this.state.tel}
-        error={numberLength}
         onChange = {(e, value) => {
            this.setState({tel: value})
          }}
