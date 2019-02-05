@@ -18,7 +18,7 @@ const styles = {
 }
 
 function validateTextfield(content) {
-  if (content.length > 500) {
+  if (content.length > 2000) {
     return 'Text zu lang'
   } else {
     return null
@@ -45,7 +45,6 @@ class Form extends Component {
     constructor(props) {
     super(props);
     this.state = {
-      category: null,
       email: props.data.me
         ? props.data.me.email
         : '',
@@ -75,7 +74,7 @@ class Form extends Component {
     const emailInValid = validateEmailAdress(email)
     const content = this.state.content
     const textInValid = validateTextfield(content)
-    const textLength = 500-content.length
+    const textLength = 2000-content.length
     const tel = this.state.tel
     const numberLength = validatePhonenumber(tel)
 
@@ -125,16 +124,13 @@ class Form extends Component {
       {this.state.loading ? 
         <InlineSpinner size={26} /> 
         :<Button 
-          disabled={emailInValid || !this.state.category || textInValid || this.state.content === ""}
+          disabled={emailInValid || textInValid || this.state.content === ""}
           primary 
           onClick={() => {
-            //loading-->
             this.setState({loading: true})
-            //setTimeout(() => {
-            this.props.onSubmit(this.state.email, this.state.content, this.state.category)
+            this.props.onSubmit(this.state.email, this.state.content, this.state.tel)
               .then(() => this.setState({ submitted: true }))
               .catch((err) => console.error(err))
-            //}, 500)
           }}
         >
           Senden
@@ -155,8 +151,8 @@ const query = gql`
   }
 `
 const mutation = gql`
-  mutation submitStory($email: String!, $content: String!, $category: InheritanceStoryCategory! ) {
-  submitInheritanceStory(email: $email, content: $content, category: $category 
+  mutation submitStory($email: String!, $content: String!, $tel: String ) {
+  submitInheritanceStory(email: $email, content: $content, tel: $tel 
 )
 }`
 
@@ -164,8 +160,8 @@ const FormWithQuery = compose(
   graphql(query),
   graphql(mutation, {
     props: ({ mutate }) => ({
-      onSubmit: (email, content, category) =>
-        mutate({ variables: { email, content, category } })
+      onSubmit: (email, content) =>
+        mutate({ variables: { email, content, tel} })
     })
   })
 )(Form)
