@@ -29,7 +29,7 @@ function validateEmailAdress(email){
  if (isEmail(email)) {
   return null
  } else {
-  return 'Geben sie eine gültige E-Mail-Adresse an' 
+  return 'Geben sie eine gültige E-Mail-Adresse an'
  }
 }
 
@@ -75,7 +75,7 @@ class Form extends Component {
 
    return (
     <div>
-      <Field 
+      <Field
         label='E-Mail-Adresse'
         type= "email"
         value={email}
@@ -84,7 +84,7 @@ class Form extends Component {
           this.setState({email: value, validateEmail: isValidating})
         }}
       />
-      <Field 
+      <Field
         label='Telefonnummer (freiwillig)'
         type= "tel"
         value={this.state.tel}
@@ -92,8 +92,8 @@ class Form extends Component {
            this.setState({tel: value})
          }}
       />
-      <Field 
-        label='Ihre Geschichte' 
+      <Field
+        label='Ihre Geschichte'
         error={content && textInValid}
         value={this.state.content}
         renderInput={(inputProps) => (
@@ -110,11 +110,11 @@ class Form extends Component {
         <Interaction.P style={{marginTop: -15}}>{textLength}</Interaction.P>
       </div>
       <div style={{marginTop:10, display:"flex", justifyContent: "flex-end"}}>
-      {this.state.loading ? 
-        <InlineSpinner size={26} /> 
-        :<Button 
+      {this.state.loading ?
+        <InlineSpinner size={26} />
+        :<Button
           disabled={emailInValid || textInValid || this.state.content === ""}
-          primary 
+          primary
           onClick={() => {
             this.setState({loading: true})
             this.props.onSubmit(this.state.email, this.state.content, this.state.tel)
@@ -140,9 +140,8 @@ const query = gql`
   }
 `
 const mutation = gql`
-  mutation submitStory($email: String!, $content: String!, $tel: String ) {
-  submitInheritanceStory(email: $email, content: $content, tel: $tel 
-)
+  mutation submitStory($email: String!, $content: String!, $tel: String) {
+    submitInheritanceStory(email: $email, content: $content, tel: $tel)
 }`
 
 const FormWithQuery = compose(
