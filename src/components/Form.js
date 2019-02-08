@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import {Button, Dropdown, Field, Interaction, InlineSpinner} from '@project-r/styleguide'
+import {Button, Dropdown, Field, Interaction, InlineSpinner, colors} from '@project-r/styleguide'
 import AutosizeInput from 'react-textarea-autosize'
 import { css } from 'glamor'
 import isEmail from 'validator/lib/isEmail'
@@ -119,12 +119,23 @@ class Form extends Component {
             this.setState({loading: true})
             this.props.onSubmit(this.state.email, this.state.content, this.state.tel)
               .then(() => this.setState({ submitted: true }))
-              .catch((err) => console.error(err))
+              .catch((err) => {
+                console.error(err)
+                this.setState({
+                  loading: false,
+                  error: err.graphQLErrors[0].message
+                })
+              })
           }}
         >
           Senden
         </Button>
         }
+      </div>
+      <div style={{marginTop:10, display:"flex", justifyContent: "center"}}>
+       {this.state.error &&
+         <p style={{color: colors.error}}>{this.state.error}</p>
+       }
       </div>
     </div>
   ); //return end
