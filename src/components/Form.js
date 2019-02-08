@@ -42,7 +42,7 @@ class Form extends Component {
         : '',
       validateEmail: false,
       content: "",
-      tel: "",
+      tel: "", //hier wenn möglich telnummer vorausfüllen
       submitted: false,
       loading: false
     };
@@ -149,7 +149,7 @@ const FormWithQuery = compose(
   graphql(query),
   graphql(mutation, {
     props: ({ mutate }) => ({
-      onSubmit: (email, content) =>
+      onSubmit: (email, content, tel) =>
         mutate({ variables: { email, content, tel} })
     })
   })
