@@ -1,3 +1,13 @@
+## Questions
+
+scope:
+ - [ ] crowdsource questions
+   - [ ] list present questions
+   - [ ] composer to add question
+   - [ ] voting for questions
+
+This is a fork of: https://github.com/orbiting/erbschaft
+
 ### Develop
 
 ```bash
