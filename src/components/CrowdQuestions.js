@@ -90,7 +90,6 @@ class CrowdQuestions extends Component {
           loading={data.loading}
           error={data.error}
           render={() => {
-            discussion.closed = true
             return (
               <Fragment>
                 {comments && comments.nodes
