@@ -22,9 +22,10 @@ Was möchten Sie Fragen?
 {
   "autoHtml": false,
   "props": {
-    "discussionId": "dfa7c047-ea72-4a86-a710-58225a4bb7f8"
+    "discussionId": "dfa7c047-ea72-4a86-a710-58225a4bb7f8",
+    "answerTitle": "Antwort der Post"
   },
-  "src": "https://cdn.republik.space/s3/republik-assets/dynamic-components/questions/index.js"
+  "src": "https://cdn.republik.space/s3/republik-assets/dynamic-components/crowd-questions/index.js"
 }
 ```
 

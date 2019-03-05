@@ -110,7 +110,8 @@ class CrowdQuestionsComment extends Component {
       comment,
       index,
       isMember,
-      submitHandler
+      submitHandler,
+      hideVotes = false
     } = this.props
     const {
       id,
@@ -127,50 +128,52 @@ class CrowdQuestionsComment extends Component {
         }
         <div {...styles.question} >{Comment.renderComment(content)}</div>
 
-        <div {...styles.rightActions}>
-          <div {...styles.votes}>
-            <Mutation
-              mutation={upvoteCommentQuery}
-            >
-              {(mutateComment) => (
-                <div {...styles.vote}>
-                  <IconButton
-                    onClick={
-                      (isMember && !discussion.closed && (!userVote || userVote === 'DOWN'))
-                      ? submitHandler(mutateComment, { commentId: id })
-                      : null
-                    }
-                    title="+1">
-                    <MdKeyboardArrowUp />
-                  </IconButton>
-                  <Label
-                    title={`${upVotes} stimmen dafür`}>{upVotes}</Label>
-                </div>
-              )}
-            </Mutation>
-            <div {...styles.voteDivider}>/</div>
-            <Mutation
-              mutation={downvoteCommentQuery}
+        {!hideVotes &&
+          <div {...styles.rightActions}>
+            <div {...styles.votes}>
+              <Mutation
+                mutation={upvoteCommentQuery}
+              >
+                {(mutateComment) => (
+                  <div {...styles.vote}>
+                    <IconButton
+                      onClick={
+                        (isMember && !discussion.closed && (!userVote || userVote === 'DOWN'))
+                        ? submitHandler(mutateComment, { commentId: id })
+                        : null
+                      }
+                      title="+1">
+                      <MdKeyboardArrowUp />
+                    </IconButton>
+                    <Label
+                      title={`${upVotes} stimmen dafür`}>{upVotes}</Label>
+                  </div>
+                )}
+              </Mutation>
+              <div {...styles.voteDivider}>/</div>
+              <Mutation
+                mutation={downvoteCommentQuery}
 
-            >
-              {(mutateComment) => (
-                <div {...styles.vote}>
-                  <Label
-                    title={`${downVotes} stimmen dagegen`}>{downVotes}</Label>
-                  <IconButton
-                    onClick={
-                      (isMember && !discussion.closed && (!userVote || userVote === 'UP'))
-                      ? submitHandler(mutateComment, { commentId: id })
-                      : null
-                    }
-                    title='-1'>
-                    <MdKeyboardArrowDown />
-                  </IconButton>
-                </div>
-              )}
-            </Mutation>
+              >
+                {(mutateComment) => (
+                  <div {...styles.vote}>
+                    <Label
+                      title={`${downVotes} stimmen dagegen`}>{downVotes}</Label>
+                    <IconButton
+                      onClick={
+                        (isMember && !discussion.closed && (!userVote || userVote === 'UP'))
+                        ? submitHandler(mutateComment, { commentId: id })
+                        : null
+                      }
+                      title='-1'>
+                      <MdKeyboardArrowDown />
+                    </IconButton>
+                  </div>
+                )}
+              </Mutation>
+            </div>
           </div>
-        </div>
+        }
       </div>
     )
   }

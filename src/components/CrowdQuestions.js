@@ -28,8 +28,10 @@ const styles = {
     marginBottom: 5
   }),
   answer: css({
+    paddingTop: 20,
+    paddingRight: 20,
+    paddingBottom: 20,
     paddingLeft: 40,
-    paddingBottom: 20
   }),
   answerTitle: css({
     ...fontStyles.sansSerifMedium16,
@@ -59,7 +61,7 @@ class CrowdQuestions extends Component {
   }
 
   render () {
-    const { t, discussionId, focusId = null, data, isMember } = this.props
+    const { answerTitle, discussionId, focusId = null, data, isMember } = this.props
     const { orderBy, now, isComposing } = this.state
     const { discussion } = data
     const comments = discussion && discussion.comments
@@ -105,12 +107,13 @@ class CrowdQuestions extends Component {
                         />
                         {comment.comments && comment.comments.nodes[0] &&
                           <div {...styles.answer}>
-                            <p {...styles.answerTitle}>Antwort der Post:</p>
+                            <div {...styles.answerTitle}>{answerTitle}</div>
                             <Comment
                               discussion={discussion}
                               comment={comment.comments.nodes[0]}
                               isMember={isMember}
                               submitHandler={this.submitHandler}
+                              hideVotes={true}
                             />
                           </div>
                         }
@@ -123,7 +126,7 @@ class CrowdQuestions extends Component {
                 }
 
                 {!discussion.closed && !isMember &&
-                    <p>Sie müssen sich zuerst anmelden</p>
+                  <p>Sie müssen sich zuerst anmelden</p>
                 }
 
                 {!discussion.closed && isMember &&
