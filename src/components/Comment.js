@@ -105,60 +105,72 @@ const IconButton = ({ iconSize, type = 'right', onClick, title, children, style 
 class CrowdQuestionsComment extends Component {
 
   render () {
-    const { comment, index, isMember, submitHandler } = this.props
-    const { id, userVote, upVotes, downVotes, content } = comment
+    const {
+      discussion,
+      comment,
+      index,
+      isMember,
+      submitHandler
+    } = this.props
+    const {
+      id,
+      userVote,
+      upVotes,
+      downVotes,
+      content
+    } = comment
 
     return (
       <div {...styles.wrapper} key={`comment-${id}`}>
-        <div {...styles.questionRank}>{index + 1}.</div>
+        {index !== undefined &&
+          <div {...styles.questionRank}>{index + 1}.</div>
+        }
         <div {...styles.question} >{Comment.renderComment(content)}</div>
 
-        {isMember &&
-          <div {...styles.rightActions}>
-            <div {...styles.votes}>
-              <Mutation
-                mutation={upvoteCommentQuery}
-              >
-                {(mutateComment) => (
-                  <div {...styles.vote}>
-                    <IconButton
-                      onClick={
-                        (!userVote || userVote === 'DOWN')
-                        ? submitHandler(mutateComment, { commentId: id })
-                        : null
-                      }
-                      title="+1">
-                      <MdKeyboardArrowUp />
-                    </IconButton>
-                    <Label
-                      title={`${upVotes} stimmen dafür`}>{upVotes}</Label>
-                  </div>
-                )}
-              </Mutation>
-              <div {...styles.voteDivider}>/</div>
-              <Mutation
-                mutation={downvoteCommentQuery}
+        <div {...styles.rightActions}>
+          <div {...styles.votes}>
+            <Mutation
+              mutation={upvoteCommentQuery}
+            >
+              {(mutateComment) => (
+                <div {...styles.vote}>
+                  <IconButton
+                    onClick={
+                      (isMember && !discussion.closed && (!userVote || userVote === 'DOWN'))
+                      ? submitHandler(mutateComment, { commentId: id })
+                      : null
+                    }
+                    title="+1">
+                    <MdKeyboardArrowUp />
+                  </IconButton>
+                  <Label
+                    title={`${upVotes} stimmen dafür`}>{upVotes}</Label>
+                </div>
+              )}
+            </Mutation>
+            <div {...styles.voteDivider}>/</div>
+            <Mutation
+              mutation={downvoteCommentQuery}
 
-              >
-                {(mutateComment) => (
-                  <div {...styles.vote}>
-                    <Label
-                      title={`${downVotes} stimmen dagegen`}>{downVotes}</Label>
-                    <IconButton
-                      onClick={
-                        (!userVote || userVote === 'UP')
-                        ? submitHandler(mutateComment, { commentId: id })
-                        : null
-                      }
-                      title='-1'>
-                      <MdKeyboardArrowDown />
-                    </IconButton>
-                  </div>
-                )}
-              </Mutation>
-            </div>
+            >
+              {(mutateComment) => (
+                <div {...styles.vote}>
+                  <Label
+                    title={`${downVotes} stimmen dagegen`}>{downVotes}</Label>
+                  <IconButton
+                    onClick={
+                      (isMember && !discussion.closed && (!userVote || userVote === 'UP'))
+                      ? submitHandler(mutateComment, { commentId: id })
+                      : null
+                    }
+                    title='-1'>
+                    <MdKeyboardArrowDown />
+                  </IconButton>
+                </div>
+              )}
+            </Mutation>
           </div>
-        }
+        </div>
       </div>
     )
   }

@@ -1,88 +1,44 @@
 import gql from 'graphql-tag'
 import { graphql } from 'react-apollo'
 
-const getComments = gql`
-query getComments(
-  $first: Int!,
-  $after: String,
-  $orderBy: DiscussionOrder,
-  $discussionId: ID,
-  $lastId: ID
-) {
-  comments(
-    first: $first,
-    after: $after,
-    orderBy: $orderBy,
-    discussionId: $discussionId,
-    lastId: $lastId,
-    orderDirection: DESC
-  ) {
+export const fragments = {
+  comment: gql`
+    fragment CrowdQuestionComment on Comment {
+      id
+      content
+      published
+      adminUnpublished
+      downVotes
+      upVotes
+      userVote
+      userCanEdit
+    }
+  `
+}
+
+const getDiscussion = gql`
+query getCrowdDiscussion($first: Int!, $after: String, $orderBy: DiscussionOrder, $discussionId: ID!) {
+  discussion(id: $discussionId) {
+    title
+    closed
+    comments(first: $first, after: $after, orderBy: $orderBy, orderDirection: DESC) {
       id
       totalCount
-      pageInfo {
-        hasNextPage
-        endCursor
-      }
       nodes {
-        id
-        text
-        content
-        published
-        adminUnpublished
-        downVotes
-        upVotes
-        userVote
-        score
-        userCanEdit
-        preview(length:240) {
-          string
-          more
-        }
-        displayAuthor {
-          id
-          name
-          username
-          credential {
-            description
-            verified
-          }
-          profilePicture
-        }
-        updatedAt
-        createdAt
-        parentIds
-        tags
-        discussion {
-          id
-          title
-          path
-          document {
-            id
-            meta {
-              title
-              path
-              credits
-              template
-              ownDiscussion {
-                id
-                closed
-              }
-              linkedDiscussion {
-                id
-                path
-                closed
-              }
-            }
+        ...CrowdQuestionComment
+        comments {
+          nodes {
+            ...CrowdQuestionComment
           }
         }
       }
     }
+  }
 }
+${fragments.comment}
 `
 
-
-
-export const withComments = (defaultProps = {}) => graphql(getComments, {
+export const withComments = (defaultProps = {}) => graphql(getDiscussion, {
   options: ({ discussionId, orderBy, first }) => {
     return {
       variables: {
@@ -119,36 +75,6 @@ export const withComments = (defaultProps = {}) => graphql(getComments, {
       })
   })
 })
-
-export const fragments = {
-  comment: gql`
-    fragment CrowdQuestionComment on Comment {
-      id
-      text
-      content
-      published
-      adminUnpublished
-      downVotes
-      upVotes
-      userVote
-      userCanEdit
-      displayAuthor {
-        id
-        name
-        username
-        credential {
-          description
-          verified
-        }
-        profilePicture
-      }
-      updatedAt
-      createdAt
-      parentIds
-      tags
-    }
-  `
-}
 
 
 export const upvoteCommentQuery = gql`

@@ -8,6 +8,13 @@ import { withMembership } from './Auth/checkRoles'
 import { withComments } from '../lib/queries'
 
 const styles = {
+  newQuestionDeactivated: css({
+    ...fontStyles.sansSerifRegular16,
+    border: 'none',
+    padding: '0',
+    display: 'block',
+    marginBottom: 5
+  }),
   newQuestion: css({
     ...fontStyles.sansSerifRegular16,
     outline: 'none',
@@ -19,7 +26,14 @@ const styles = {
     cursor: 'pointer',
     display: 'block',
     marginBottom: 5
-  })
+  }),
+  answer: css({
+    paddingLeft: 40,
+    paddingBottom: 20
+  }),
+  answerTitle: css({
+    ...fontStyles.sansSerifMedium16,
+  }),
 }
 
 
@@ -47,7 +61,8 @@ class CrowdQuestions extends Component {
   render () {
     const { t, discussionId, focusId = null, data, isMember } = this.props
     const { orderBy, now, isComposing } = this.state
-    const { comments } = data
+    const { discussion } = data
+    const comments = discussion && discussion.comments
 
     this.submitHandler = (mutation, variables) => () => {
       this.setState({ loading: true })
@@ -68,73 +83,94 @@ class CrowdQuestions extends Component {
     }
 
     return (
-      <Fragment>
-        <div data-discussion-id={discussionId}>
-          <Loader
-            loading={data.loading}
-            error={data.error}
-            render={() => {
-              return (
-                <div>
-                  {comments && comments.nodes
-                    .map(
-                      (node, index) =>
+      <div data-discussion-id={discussionId}>
+        <Loader
+          loading={data.loading}
+          error={data.error}
+          render={() => {
+            discussion.closed = true
+            return (
+              <Fragment>
+                {comments && comments.nodes
+                  .filter( ({ published, adminUnpublished }) => published && !adminUnpublished )
+                  .map(
+                    (comment, index) =>
+                      <Fragment key={`comment-${comment.id}`}>
                         <Comment
-                          comment={node}
+                          discussion={discussion}
+                          comment={comment}
                           index={index}
                           isMember={isMember}
-                          key={`comment-${node.id}`}
                           submitHandler={this.submitHandler}
                         />
-                    )
+                        {comment.comments && comment.comments.nodes[0] &&
+                          <div {...styles.answer}>
+                            <p {...styles.answerTitle}>Antwort der Post:</p>
+                            <Comment
+                              discussion={discussion}
+                              comment={comment.comments.nodes[0]}
+                              isMember={isMember}
+                              submitHandler={this.submitHandler}
+                            />
+                          </div>
+                        }
+                      </Fragment>
+                  )
+                }
+
+                {discussion.closed &&
+                  <p {...styles.newQuestionDeactivated}>Es können keine neue Fragen mehr eingegeben werden.</p>
+                }
+
+                {!discussion.closed && !isMember &&
+                    <p>Sie müssen sich zuerst anmelden</p>
+                }
+
+                {!discussion.closed && isMember &&
+                <div style={{ marginTop: 10 }}>
+                  {isComposing &&
+                  <Fragment>
+                    <button {...styles.newQuestion} onClick={() => {
+                      this.setState({ isComposing: false })
+                    }}>
+                      schliessen
+                    </button>
+                    {
+                      // TODO implement composer
+                      //<DiscussionCommentComposer
+                      //  discussionId={discussionId}
+                      //  orderBy={orderBy}
+                      //  focusId={focusId}
+                      //  depth={1}
+                      //  parentId={null}
+                      //  now={now}
+                      //  afterCancel={() => this.setState({ isComposing: false })}
+                      //  afterSubmit={(res) => {
+                      //    const lastId = (res && res.data && res.data.submitComment.id) || null
+                      //    this.setState({ isComposing: false, lastId })
+                      //    data.refetch({ lastId })
+                      //  }}
+                      //  state='focused'
+                      ///>
+                    }
+                  </Fragment>
+                  }
+                  {!isComposing &&
+                  <div>
+                    <button {...styles.newQuestion} onClick={() => {
+                      this.setState({ isComposing: true })
+                    }}>
+                      neue Frage stellen
+                    </button>
+                  </div>
                   }
                 </div>
-              )
-            }}
-          />
-
-          {isMember &&
-          <div style={{ marginTop: 10 }}>
-            {isComposing &&
-            <Fragment>
-              <button {...styles.newQuestion} onClick={() => {
-                this.setState({ isComposing: false })
-              }}>
-                schliessen
-              </button>
-              {
-                // TODO implement composer
-                //<DiscussionCommentComposer
-                //  discussionId={discussionId}
-                //  orderBy={orderBy}
-                //  focusId={focusId}
-                //  depth={1}
-                //  parentId={null}
-                //  now={now}
-                //  afterCancel={() => this.setState({ isComposing: false })}
-                //  afterSubmit={(res) => {
-                //    const lastId = (res && res.data && res.data.submitComment.id) || null
-                //    this.setState({ isComposing: false, lastId })
-                //    data.refetch({ lastId })
-                //  }}
-                //  state='focused'
-                ///>
-              }
-            </Fragment>
-            }
-            {!isComposing &&
-            <div>
-              <button {...styles.newQuestion} onClick={() => {
-                this.setState({ isComposing: true })
-              }}>
-                neue Frage stellen
-              </button>
-            </div>
-            }
-          </div>
-          }
-        </div>
-      </Fragment>
+                }
+              </Fragment>
+            )
+          }}
+        />
+      </div>
     )
   }
 }
