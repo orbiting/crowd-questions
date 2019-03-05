@@ -1,10 +1,10 @@
 import React, { Fragment } from 'react'
 import PropTypes from 'prop-types'
 
-import Form from './components/Form'
+import CrowdQuestions from './components/CrowdQuestions'
 
-const Wrapper = () => {
-  return <Form />
+const Wrapper = ({ discussionId }) => {
+  return <CrowdQuestions discussionId={discussionId} />
 }
 
 export default Wrapper

@@ -1,10 +1,12 @@
-## Questions
+## CrowdQuestions
 
 scope:
- - [ ] crowdsource questions
-   - [ ] list present questions
+ - [x] crowdsource questions
+   - [x] list present questions
+   - [x] voting for questions
    - [ ] composer to add question
-   - [ ] voting for questions
+
+This component was extracted out of [republik-frontend](https://github.com/orbiting/republik-frontend). In this process the composer was not migrated. To renable posting questions, you need to implement a composer.
 
 This is a fork of: https://github.com/orbiting/erbschaft
 
@@ -16,8 +18,6 @@ npm run dev:code
 npm run dev:server
 open http://localhost:3000/
 ```
-
-This assumes you have an «Articles» dir two levels above, e.g. `~/Code/erbschaft` and `~/Articles/article-erbschaft`.
 
 #### Development Server Env
 
@@ -47,7 +47,7 @@ npm run deploy
 Goto https://app.keycdn.com/zones/purgeurl/87880 and enter:
 
 ```
-/s3/republik-assets/dynamic-components/erbschaft/index.js
+/s3/republik-assets/dynamic-components/crowd-questions/index.js
 ```
 
 If you change asset files be sure to purge those too.
