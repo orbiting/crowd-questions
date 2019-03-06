@@ -29,7 +29,7 @@ const styles = {
   }),
   answer: css({
     paddingTop: 20,
-    paddingRight: 20,
+    paddingRight: 60,
     paddingBottom: 20,
     paddingLeft: 40,
   }),
