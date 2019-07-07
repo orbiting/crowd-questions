@@ -3,7 +3,7 @@ import { Mutation } from 'react-apollo'
 import { css } from 'glamor'
 import MdKeyboardArrowUp from 'react-icons/lib/md/keyboard-arrow-up'
 import MdKeyboardArrowDown from 'react-icons/lib/md/keyboard-arrow-down'
-import { colors, fontStyles, Label, mediaQueries, Comment } from '@project-r/styleguide'
+import { colors, fontStyles, Label, mediaQueries, renderCommentMdast } from '@project-r/styleguide'
 
 import { upvoteCommentQuery, downvoteCommentQuery } from '../lib/queries'
 
@@ -126,7 +126,7 @@ class CrowdQuestionsComment extends Component {
         {index !== undefined &&
           <div {...styles.questionRank}>{index + 1}.</div>
         }
-        <div {...styles.question} >{Comment.renderComment(content)}</div>
+        <div {...styles.question} >{renderCommentMdast(content)}</div>
 
         {!hideVotes &&
           <div {...styles.rightActions}>
