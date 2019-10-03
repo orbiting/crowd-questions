@@ -1,9 +1,16 @@
 import React, { Fragment, Component } from 'react'
 import { compose } from 'react-apollo'
 import { css } from 'glamor'
-import { colors, fontStyles, Loader } from '@project-r/styleguide'
+import {
+  colors,
+  fontStyles,
+  Loader,
+  Dropdown
+} from '@project-r/styleguide'
 import Comment from './Comment'
+import Composer from './Composer'
 import { withMembership } from './Auth/checkRoles'
+import withT from './Auth/withT'
 
 import { withComments } from '../lib/queries'
 
@@ -38,16 +45,11 @@ const styles = {
   }),
 }
 
-
 class CrowdQuestions extends Component {
   constructor (props) {
     super(props)
 
-    this.state = {
-      orderBy: 'VOTES', // DiscussionOrder
-      now: Date.now(),
-      isComposing: false
-    }
+    this.t = props.createFormatter(props.translations || [])
   }
 
   componentDidMount () {
@@ -62,7 +64,6 @@ class CrowdQuestions extends Component {
 
   render () {
     const { answerTitle, discussionId, focusId = null, data, isMember } = this.props
-    const { orderBy, now, isComposing } = this.state
     const { discussion } = data
     const comments = discussion && discussion.comments
 
@@ -83,6 +84,19 @@ class CrowdQuestions extends Component {
           })
         })
     }
+
+    const itemsWithElements = [
+      { value: 1, text: 'Text 1', element: <span>Element 1</span> },
+      { value: 2, text: 'Text 2', element: <span>Element 2</span> },
+      { value: 3, text: 'Text 3', element: <span>Element 3</span> }
+    ]
+
+    const itemsWithoutElements = [
+      { value: 1, text: 'Text 1' },
+      { value: 2, text: 'Text 2' },
+      { value: 3, text: 'Text 3' }
+    ]
+
 
     return (
       <div data-discussion-id={discussionId}>
@@ -128,46 +142,11 @@ class CrowdQuestions extends Component {
                   <p>Sie müssen sich zuerst anmelden</p>
                 }
 
-                {!discussion.closed && isMember &&
-                <div style={{ marginTop: 10 }}>
-                  {isComposing &&
-                  <Fragment>
-                    <button {...styles.newQuestion} onClick={() => {
-                      this.setState({ isComposing: false })
-                    }}>
-                      schliessen
-                    </button>
-                    {
-                      // TODO implement composer
-                      //<DiscussionCommentComposer
-                      //  discussionId={discussionId}
-                      //  orderBy={orderBy}
-                      //  focusId={focusId}
-                      //  depth={1}
-                      //  parentId={null}
-                      //  now={now}
-                      //  afterCancel={() => this.setState({ isComposing: false })}
-                      //  afterSubmit={(res) => {
-                      //    const lastId = (res && res.data && res.data.submitComment.id) || null
-                      //    this.setState({ isComposing: false, lastId })
-                      //    data.refetch({ lastId })
-                      //  }}
-                      //  state='focused'
-                      ///>
-                    }
-                  </Fragment>
-                  }
-                  {!isComposing &&
-                  <div>
-                    <button {...styles.newQuestion} onClick={() => {
-                      this.setState({ isComposing: true })
-                    }}>
-                      neue Frage stellen
-                    </button>
+                {!discussion.closed && isMember && (
+                  <div style={{ marginTop: 10 }}>
+                    <Composer discussion={discussion} t={this.t} />
                   </div>
-                  }
-                </div>
-                }
+                )}
               </Fragment>
             )
           }}
@@ -178,6 +157,7 @@ class CrowdQuestions extends Component {
 }
 
 export default compose(
+  withT,
   withMembership,
   withComments({
     orderBy: 'VOTES',

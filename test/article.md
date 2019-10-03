@@ -22,8 +22,21 @@ Was möchten Sie Fragen?
 {
   "autoHtml": false,
   "props": {
-    "discussionId": "dfa7c047-ea72-4a86-a710-58225a4bb7f8",
-    "answerTitle": "Antwort der Post"
+    "discussionId": "3e8b8db1-95a5-4938-8c13-f0d6486d9079",
+    "translations": [
+      {
+        "key": "styleguide/CommentComposer/placeholder",
+        "value": "Einen Vorschlag verfassen…"
+      },
+      {
+        "key": "styleguide/CommentComposer/answer",
+        "value": "Vorschlagen"
+      },
+      {
+        "key": "styleguide/CommentComposer/cancel",
+        "value": "Abbrechen"
+      }
+    ]
   },
   "src": "https://cdn.republik.space/s3/republik-assets/dynamic-components/crowd-questions/index.js"
 }
