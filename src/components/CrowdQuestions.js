@@ -63,7 +63,7 @@ class CrowdQuestions extends Component {
   }
 
   render () {
-    const { answerTitle, discussionId, focusId = null, data, isMember } = this.props
+    const { answerTitle, discussionId, focusId = null, data, me, isMember } = this.props
     const { discussion } = data
     const comments = discussion && discussion.comments
 
@@ -84,18 +84,6 @@ class CrowdQuestions extends Component {
           })
         })
     }
-
-    const itemsWithElements = [
-      { value: 1, text: 'Text 1', element: <span>Element 1</span> },
-      { value: 2, text: 'Text 2', element: <span>Element 2</span> },
-      { value: 3, text: 'Text 3', element: <span>Element 3</span> }
-    ]
-
-    const itemsWithoutElements = [
-      { value: 1, text: 'Text 1' },
-      { value: 2, text: 'Text 2' },
-      { value: 3, text: 'Text 3' }
-    ]
 
 
     return (
@@ -134,19 +122,18 @@ class CrowdQuestions extends Component {
                   )
                 }
 
-                {discussion.closed &&
-                  <p {...styles.newQuestionDeactivated}>Es können keine neue Fragen mehr eingegeben werden.</p>
+                {discussion.closed
+                  ? <p {...styles.newQuestionDeactivated}>
+                    Es können keine neue Fragen mehr eingegeben werden.
+                  </p>
+                  : me
+                    ? isMember
+                      ? <div style={{ marginTop: 10 }}>
+                        <Composer discussion={discussion} t={this.t} />
+                      </div>
+                      : <p>Nur Mitglieder können Vorschläge machen.</p>
+                    : <p>Sie müssen sich zuerst anmelden</p>
                 }
-
-                {!discussion.closed && !isMember &&
-                  <p>Sie müssen sich zuerst anmelden</p>
-                }
-
-                {!discussion.closed && isMember && (
-                  <div style={{ marginTop: 10 }}>
-                    <Composer discussion={discussion} t={this.t} />
-                  </div>
-                )}
               </Fragment>
             )
           }}
