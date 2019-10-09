@@ -148,6 +148,15 @@ mutation discussionDownvoteComment($commentId: ID!) {
 ${fragments.comment}
 `
 
+export const unvoteCommentMutation = gql`
+mutation unvoteComment($commentId: ID!) {
+  unvoteComment(id: $commentId) {
+    ...CrowdQuestionComment
+  }
+}
+${fragments.comment}
+`
+
 export const submitCommentMutation = gql`
 mutation submitComment($discussionId: ID!, $content: String!, $tags: [String!]!) {
   submitComment(discussionId: $discussionId, content: $content, tags: $tags) {

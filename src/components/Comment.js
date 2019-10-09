@@ -5,7 +5,7 @@ import MdKeyboardArrowUp from 'react-icons/lib/md/keyboard-arrow-up'
 import MdKeyboardArrowDown from 'react-icons/lib/md/keyboard-arrow-down'
 import { colors, fontStyles, Label, mediaQueries, renderCommentMdast } from '@project-r/styleguide'
 
-import { upvoteCommentQuery, downvoteCommentQuery } from '../lib/queries'
+import { upvoteCommentQuery, downvoteCommentQuery, unvoteCommentMutation } from '../lib/queries'
 
 const buttonStyle = {
   outline: 'none',
@@ -52,11 +52,6 @@ const styles = {
     margin: '0 4px',
     '& svg': {
       margin: '0 auto'
-    },
-
-    '&[disabled]': {
-      cursor: 'inherit',
-      color: colors.disabled
     }
   }),
   rightButton: css({
@@ -93,10 +88,13 @@ const styles = {
 //
 // The outer dimensions of the action button element is always the same:
 // square and as tall as the 'CommentAction' component.
-const IconButton = ({ iconSize, type = 'right', onClick, title, children, style = {} }) => (
-  <button {...styles.iconButton} {...styles[`${type}Button`]} {...style}
+const IconButton = ({ iconSize, type = 'right', onClick, disabled, title, children }) => (
+  <button {...styles.iconButton} {...styles[`${type}Button`]}
     title={title}
-    disabled={!onClick}
+    style={{
+      cursor: onClick ? undefined : 'inherit',
+      color: disabled ? colors.disabled : undefined
+    }}
     onClick={onClick}>
     {children}
   </button>
@@ -109,7 +107,7 @@ class CrowdQuestionsComment extends Component {
       discussion,
       comment,
       index,
-      isMember,
+      userCanComment,
       submitHandler,
       hideVotes = false
     } = this.props
@@ -131,44 +129,53 @@ class CrowdQuestionsComment extends Component {
         {!hideVotes &&
           <div {...styles.rightActions}>
             <div {...styles.votes}>
-              <Mutation
-                mutation={upvoteCommentQuery}
-              >
-                {(mutateComment) => (
-                  <div {...styles.vote}>
-                    <IconButton
-                      onClick={
-                        (isMember && !discussion.closed && (!userVote || userVote === 'DOWN'))
-                        ? submitHandler(mutateComment, { commentId: id })
-                        : null
-                      }
-                      title="+1">
-                      <MdKeyboardArrowUp />
-                    </IconButton>
-                    <Label
-                      title={`${upVotes} stimmen dafür`}>{upVotes}</Label>
-                  </div>
-                )}
-              </Mutation>
-              <div {...styles.voteDivider}>/</div>
-              <Mutation
-                mutation={downvoteCommentQuery}
-
-              >
-                {(mutateComment) => (
-                  <div {...styles.vote}>
-                    <Label
-                      title={`${downVotes} stimmen dagegen`}>{downVotes}</Label>
-                    <IconButton
-                      onClick={
-                        (isMember && !discussion.closed && (!userVote || userVote === 'UP'))
-                        ? submitHandler(mutateComment, { commentId: id })
-                        : null
-                      }
-                      title='-1'>
-                      <MdKeyboardArrowDown />
-                    </IconButton>
-                  </div>
+              <Mutation mutation={unvoteCommentMutation}>
+                {(unvoteComment) => (
+                  <>
+                    <Mutation mutation={upvoteCommentQuery}>
+                      {(mutateComment) => (
+                        <div {...styles.vote}>
+                          <IconButton
+                            disabled={!userCanComment || discussion.closed || userVote === 'UP'}
+                            onClick={
+                              userCanComment && !discussion.closed && (
+                                submitHandler(
+                                  userVote !== 'UP' ? mutateComment : unvoteComment,
+                                  { commentId: id }
+                                )
+                              )
+                            }
+                            title="+1">
+                            <MdKeyboardArrowUp />
+                          </IconButton>
+                          <Label
+                            title={`${upVotes} stimmen dafür`}>{upVotes}</Label>
+                        </div>
+                      )}
+                    </Mutation>
+                    <div {...styles.voteDivider}>/</div>
+                    <Mutation mutation={downvoteCommentQuery}>
+                      {(mutateComment) => (
+                        <div {...styles.vote}>
+                          <Label
+                            title={`${downVotes} stimmen dagegen`}>{downVotes}</Label>
+                          <IconButton
+                            disabled={!userCanComment || discussion.closed || userVote === 'DOWN'}
+                            onClick={
+                              userCanComment && !discussion.closed && (
+                                submitHandler(
+                                  userVote !== 'DOWN' ? mutateComment : unvoteComment,
+                                  { commentId: id }
+                                )
+                              )
+                            }
+                            title='-1'>
+                            <MdKeyboardArrowDown />
+                          </IconButton>
+                        </div>
+                      )}
+                    </Mutation>
+                  </>
                 )}
               </Mutation>
             </div>
@@ -177,7 +184,6 @@ class CrowdQuestionsComment extends Component {
       </div>
     )
   }
-
 }
 
 export default CrowdQuestionsComment

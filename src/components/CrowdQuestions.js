@@ -109,7 +109,7 @@ class CrowdQuestions extends Component {
                           discussion={discussion}
                           comment={comment}
                           index={index}
-                          isMember={isMember}
+                          userCanComment={discussion.userCanComment}
                           submitHandler={this.submitHandler}
                         />
                         {comment.comments && comment.comments.nodes[0] &&
@@ -118,7 +118,7 @@ class CrowdQuestions extends Component {
                             <Comment
                               discussion={discussion}
                               comment={comment.comments.nodes[0]}
-                              isMember={isMember}
+                              userCanComment={discussion.userCanComment}
                               submitHandler={this.submitHandler}
                               hideVotes={true}
                             />
