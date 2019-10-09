@@ -98,24 +98,6 @@ class CrowdQuestions extends Component {
     const { discussion } = data
     const comments = discussion && discussion.comments
 
-    this.submitHandler = (mutation, variables) => () => {
-      this.setState({ loading: true })
-
-      return mutation({
-        variables
-      })
-        .then(() => {
-          this.setState(() => ({ loading: false }))
-        })
-        .catch((err) => {
-          console.error(err)
-          this.setState({
-            loading: false
-            // error: err.graphQLErrors[0].message
-          })
-        })
-    }
-
 
     return (
       <div data-discussion-id={discussionId}>
@@ -126,50 +108,50 @@ class CrowdQuestions extends Component {
             return (
               <Fragment>
                 <table {...styles.table}>
-                  {comments && comments.nodes
-                    .filter( ({ published, adminUnpublished }) => published && !adminUnpublished )
-                    .map(
-                      (comment, index) =>
-                        <tr key={`comment-${comment.id}`} {...styles.tr}>
-                          <th>
-                            {index + 1}.
-                          </th>
-                          <td>
-                            <Comment
-                              discussion={discussion}
-                              comment={comment}
-                              userCanComment={discussion.userCanComment}
-                              submitHandler={this.submitHandler}
-                            />
-                            {comment.comments && comment.comments.nodes[0] &&
-                              <div {...styles.answer}>
-                                <div {...styles.answerTitle}>{answerTitle}</div>
-                                <Comment
-                                  discussion={discussion}
-                                  comment={comment.comments.nodes[0]}
-                                  userCanComment={discussion.userCanComment}
-                                  submitHandler={this.submitHandler}
-                                  hideVotes={true}
-                                />
-                              </div>
-                            }
-                          </td>
-                        </tr>
-                    )
-                  }
+                  <tbody>
+                    {comments && comments.nodes
+                      .filter(({ published, adminUnpublished }) => published && !adminUnpublished)
+                      .map(
+                        (comment, index) =>
+                          <tr key={`comment-${comment.id}`} {...styles.tr}>
+                            <th>
+                              {index + 1}.
+                            </th>
+                            <td>
+                              <Comment
+                                discussion={discussion}
+                                comment={comment}
+                                userCanComment={discussion.userCanComment}
+                              />
+                              {comment.comments && comment.comments.nodes[0] &&
+                                <div {...styles.answer}>
+                                  <div {...styles.answerTitle}>{answerTitle}</div>
+                                  <Comment
+                                    discussion={discussion}
+                                    comment={comment.comments.nodes[0]}
+                                    userCanComment={discussion.userCanComment}
+                                    hideVotes={true}
+                                  />
+                                </div>
+                              }
+                            </td>
+                          </tr>
+                      )
+                    }
+                  </tbody>
                 </table>
 
                 {compose && (discussion.closed
-                    ? <p {...styles.newQuestionDeactivated}>
-                      {t('discussion/closed')}
-                    </p>
-                    : me
-                      ? discussion.userCanComment
-                        ? <div style={{ marginTop: 10 }}>
-                          <Composer discussion={discussion} t={t} />
-                        </div>
-                        : <p>{t('discussion/notEligible')}</p>
-                      : <p>{t('discussion/notSignedIn')}</p>
+                  ? <p {...styles.newQuestionDeactivated}>
+                    {t('discussion/closed')}
+                  </p>
+                  : me
+                    ? discussion.userCanComment
+                      ? <div style={{ marginTop: 10 }}>
+                        <Composer discussion={discussion} t={t} />
+                      </div>
+                      : <p>{t('discussion/notEligible')}</p>
+                    : <p>{t('discussion/notSignedIn')}</p>
                 )}
               </Fragment>
             )

@@ -69,30 +69,33 @@ const CrowdQuestionsComment = props => {
     hideVotes = false
   } = props
   const {
-    id,
+    id: commentId,
     userVote,
     upVotes,
     downVotes,
     content
   } = comment
 
+  const options = {
+    variables: { commentId }
+  }
+
   return (
     <div {...styles.wrapper}>
       {!hideVotes && <div {...styles.rightActions}>
         <Mutation mutation={unvoteCommentMutation}>
-          {(unvoteComment) => (
+          {unvoteComment => (
             <>
               <Mutation mutation={upvoteCommentQuery}>
-                {(mutateComment) => (
+                {voteComment => (
                   <IconButton
                     disabled={!userCanComment || discussion.closed || userVote === 'UP'}
                     onClick={
-                      userCanComment && !discussion.closed && (
-                        submitHandler(
-                          userVote !== 'UP' ? mutateComment : unvoteComment,
-                          { commentId: id }
-                        )
-                      )
+                      userCanComment && !discussion.closed && (() => (
+                        userVote !== 'UP'
+                          ? voteComment(options)
+                          : unvoteComment(options)
+                      ))
                     }
                     title="+1">
                     <MdKeyboardArrowUp />
@@ -105,16 +108,15 @@ const CrowdQuestionsComment = props => {
               <Label
                 title={`${downVotes} stimmen dagegen`}>{downVotes}</Label>
               <Mutation mutation={downvoteCommentQuery}>
-                {(mutateComment) => (
+                {voteComment => (
                   <IconButton
                     disabled={!userCanComment || discussion.closed || userVote === 'DOWN'}
                     onClick={
-                      userCanComment && !discussion.closed && (
-                        submitHandler(
-                          userVote !== 'DOWN' ? mutateComment : unvoteComment,
-                          { commentId: id }
-                        )
-                      )
+                      userCanComment && !discussion.closed && (() => (
+                        userVote !== 'DOWN'
+                          ? voteComment(options)
+                          : unvoteComment(options)
+                      ))
                     }
                     title='-1'>
                     <MdKeyboardArrowDown />
