@@ -5,12 +5,12 @@ import {
   colors,
   fontStyles,
   Loader,
-  Dropdown
+  Dropdown,
+  createFormatter
 } from '@project-r/styleguide'
 import Comment from './Comment'
 import Composer from './Composer'
 import { withMembership } from './Auth/checkRoles'
-import withT from './Auth/withT'
 
 import { withComments } from '../lib/queries'
 
@@ -49,7 +49,12 @@ class CrowdQuestions extends Component {
   constructor (props) {
     super(props)
 
-    this.t = props.createFormatter(props.translations || [])
+    this.t = createFormatter([
+      {key: 'discussion/closed', value: 'Es können keine neue Fragen mehr eingegeben werden.'},
+      {key: 'discussion/notEligible', value: 'Wollen Sie teilnehmen? Werden Sie jetzt Verleger und Abonnentin.'},
+      {key: 'discussion/notSignedIn', value: 'Sie müssen sich zuerst anmelden.'},
+      ...props.translations || []
+    ])
   }
 
   componentDidMount () {
@@ -63,7 +68,8 @@ class CrowdQuestions extends Component {
   }
 
   render () {
-    const { answerTitle, discussionId, focusId = null, data, me, isMember } = this.props
+    const { t } = this
+    const { answerTitle, discussionId, compose = true, focusId = null, data, me, isMember } = this.props
     const { discussion } = data
     const comments = discussion && discussion.comments
 
@@ -122,18 +128,18 @@ class CrowdQuestions extends Component {
                   )
                 }
 
-                {discussion.closed
-                  ? <p {...styles.newQuestionDeactivated}>
-                    Es können keine neue Fragen mehr eingegeben werden.
-                  </p>
-                  : me
-                    ? isMember
-                      ? <div style={{ marginTop: 10 }}>
-                        <Composer discussion={discussion} t={this.t} />
-                      </div>
-                      : <p>Nur Mitglieder können Vorschläge machen.</p>
-                    : <p>Sie müssen sich zuerst anmelden</p>
-                }
+                {compose && (discussion.closed
+                    ? <p {...styles.newQuestionDeactivated}>
+                      {t('discussion/closed')}
+                    </p>
+                    : me
+                      ? discussion.userCanComment
+                        ? <div style={{ marginTop: 10 }}>
+                          <Composer discussion={discussion} t={t} />
+                        </div>
+                        : <p>{t('discussion/notEligible')}</p>
+                      : <p>{t('discussion/notSignedIn')}</p>
+                )}
               </Fragment>
             )
           }}
@@ -144,7 +150,6 @@ class CrowdQuestions extends Component {
 }
 
 export default compose(
-  withT,
   withMembership,
   withComments({
     orderBy: 'VOTES',
