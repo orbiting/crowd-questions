@@ -6,6 +6,7 @@ import {
   fontStyles,
   Loader,
   Dropdown,
+  mediaQueries,
   createFormatter
 } from '@project-r/styleguide'
 import Comment from './Comment'
@@ -43,6 +44,30 @@ const styles = {
   answerTitle: css({
     ...fontStyles.sansSerifMedium16,
   }),
+  table: css({
+    width: '100%'
+  }),
+  tr: css({
+    marginBottom: 3,
+    '& td p': {
+      ...fontStyles.serifRegular17,
+      [mediaQueries.mUp]: {
+        ...fontStyles.serifRegular19
+      }
+    },
+    '& th': css({
+      width: 20,
+      verticalAlign: 'top',
+      ...fontStyles.serifRegular17,
+      ...fontStyles.sansSerifMedium,
+      [mediaQueries.mUp]: {
+        ...fontStyles.serifRegular19,
+        ...fontStyles.sansSerifMedium
+      },
+      textAlign: 'right',
+      paddingRight: 5
+    })
+  })
 }
 
 class CrowdQuestions extends Component {
@@ -100,33 +125,39 @@ class CrowdQuestions extends Component {
           render={() => {
             return (
               <Fragment>
-                {comments && comments.nodes
-                  .filter( ({ published, adminUnpublished }) => published && !adminUnpublished )
-                  .map(
-                    (comment, index) =>
-                      <Fragment key={`comment-${comment.id}`}>
-                        <Comment
-                          discussion={discussion}
-                          comment={comment}
-                          index={index}
-                          userCanComment={discussion.userCanComment}
-                          submitHandler={this.submitHandler}
-                        />
-                        {comment.comments && comment.comments.nodes[0] &&
-                          <div {...styles.answer}>
-                            <div {...styles.answerTitle}>{answerTitle}</div>
+                <table {...styles.table}>
+                  {comments && comments.nodes
+                    .filter( ({ published, adminUnpublished }) => published && !adminUnpublished )
+                    .map(
+                      (comment, index) =>
+                        <tr key={`comment-${comment.id}`} {...styles.tr}>
+                          <th>
+                            {index + 1}.
+                          </th>
+                          <td>
                             <Comment
                               discussion={discussion}
-                              comment={comment.comments.nodes[0]}
+                              comment={comment}
                               userCanComment={discussion.userCanComment}
                               submitHandler={this.submitHandler}
-                              hideVotes={true}
                             />
-                          </div>
-                        }
-                      </Fragment>
-                  )
-                }
+                            {comment.comments && comment.comments.nodes[0] &&
+                              <div {...styles.answer}>
+                                <div {...styles.answerTitle}>{answerTitle}</div>
+                                <Comment
+                                  discussion={discussion}
+                                  comment={comment.comments.nodes[0]}
+                                  userCanComment={discussion.userCanComment}
+                                  submitHandler={this.submitHandler}
+                                  hideVotes={true}
+                                />
+                              </div>
+                            }
+                          </td>
+                        </tr>
+                    )
+                  }
+                </table>
 
                 {compose && (discussion.closed
                     ? <p {...styles.newQuestionDeactivated}>
