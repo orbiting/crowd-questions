@@ -6,7 +6,6 @@ query CrowdQuestionMe {
   me {
     id
     username
-    portrait
     name
     firstName
     lastName
