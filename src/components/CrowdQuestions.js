@@ -45,10 +45,16 @@ const styles = {
     ...fontStyles.sansSerifMedium16,
   }),
   table: css({
-    width: '100%'
+    width: '100%',
+    borderSpacing: '0',
+    paddingLeft: 0,
+    paddingRight: 0
   }),
   tr: css({
     marginBottom: 3,
+    '&:nth-child(even)': {
+      backgroundColor: colors.secondaryBg
+    },
     '& td p': {
       ...fontStyles.serifRegular17,
       [mediaQueries.mUp]: {

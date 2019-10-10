@@ -46,22 +46,6 @@ export const fragments = {
         }
         profilePicture
       }
-      document {
-        id
-        meta {
-          path
-          template
-          ownDiscussion {
-            id
-            closed
-          }
-          linkedDiscussion {
-            id
-            path
-            closed
-          }
-        }
-      }
       collapsable
       tagRequired
       tags
@@ -177,8 +161,6 @@ export const withSubmitComment =
   graphql(submitCommentMutation, {
     props: ({ mutate, ownProps }) => ({
       submitComment: (content, tags = []) => {
-        console.log({ ownProps })
-
         const {
           discussion,
           t,

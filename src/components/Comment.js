@@ -27,8 +27,9 @@ const styles = {
     }
   }),
   rightActions: css({
+    display: 'inline-block',
+    whiteSpace: 'nowrap',
     textAlign: 'right',
-    width: 82,
     marginTop: -1,
     float: 'right'
   }),
@@ -82,7 +83,7 @@ const CrowdQuestionsComment = props => {
 
   return (
     <div {...styles.wrapper}>
-      {!hideVotes && <div {...styles.rightActions}>
+      {!hideVotes && <span {...styles.rightActions}>
         <Mutation mutation={unvoteCommentMutation}>
           {unvoteComment => (
             <>
@@ -126,7 +127,7 @@ const CrowdQuestionsComment = props => {
             </>
           )}
         </Mutation>
-      </div>}
+      </span>}
 
       {renderCommentMdast(content)}
     </div>
