@@ -1,4 +1,4 @@
-import React, { Fragment, Component } from 'react'
+import React, { Fragment, Component, useMemo, useEffect } from 'react'
 import { compose } from 'react-apollo'
 import { css } from 'glamor'
 import {
@@ -66,9 +66,11 @@ const styles = {
       verticalAlign: 'top',
       ...fontStyles.serifRegular17,
       ...fontStyles.sansSerifMedium,
+      fontSize: 15,
       [mediaQueries.mUp]: {
         ...fontStyles.serifRegular19,
-        ...fontStyles.sansSerifMedium
+        ...fontStyles.sansSerifMedium,
+        fontSize: 15
       },
       textAlign: 'right',
       paddingRight: 5
@@ -76,94 +78,92 @@ const styles = {
   })
 }
 
-class CrowdQuestions extends Component {
-  constructor (props) {
-    super(props)
-
-    this.t = createFormatter([
+const CrowdQuestions = (props) => {
+  const t = useMemo(
+    () => createFormatter([
       {key: 'discussion/closed', value: 'Es können keine neue Fragen mehr eingegeben werden.'},
       {key: 'discussion/notEligible', value: 'Wollen Sie teilnehmen? Werden Sie jetzt Verleger und Abonnentin.'},
       {key: 'discussion/notSignedIn', value: 'Sie müssen sich zuerst anmelden.'},
       ...props.translations || []
-    ])
-  }
+    ]),
+    [props.translations]
+  )
 
-  componentDidMount () {
-    this.intervalId = setInterval(() => {
-      this.setState({ now: Date.now() })
-    }, 10 * 1000)
-  }
+  const { answerTitle, discussionId, compose = true, focusId = null, data, me } = props
+  const { discussion } = data
+  const comments = discussion && discussion.comments
 
-  componentWillUnmount () {
-    clearInterval(this.intervalId)
-  }
+  useEffect(
+    () => {
+      if (discussion && !discussion.closed) {
+        data.startPolling(15000)
+        return () => {
+          data.stopPolling()
+        }
+      }
+    },
+    [discussion]
+  )
 
-  render () {
-    const { t } = this
-    const { answerTitle, discussionId, compose = true, focusId = null, data, me } = this.props
-    const { discussion } = data
-    const comments = discussion && discussion.comments
+  return (
+    <div data-discussion-id={discussionId}>
+      <Loader
+        loading={data.loading}
+        error={data.error}
+        render={() => {
+          return (
+            <Fragment>
+              <table {...styles.table}>
+                <tbody>
+                  {comments && comments.nodes
+                    .filter(({ published, adminUnpublished }) => published && !adminUnpublished)
+                    .map((comment, index) =>
+                      <tr key={`comment-${comment.id}`} {...styles.tr}>
+                        <th>
+                          {index + 1}.
+                        </th>
+                        <td>
+                          <Comment
+                            discussion={discussion}
+                            comment={comment}
+                            userCanComment={discussion.userCanComment}
+                          />
+                          {comment.comments && comment.comments.nodes[0] &&
+                            <div {...styles.answer}>
+                              <div {...styles.answerTitle}>{answerTitle || 'Antwort'}</div>
+                              <Comment
+                                discussion={discussion}
+                                comment={comment.comments.nodes[0]}
+                                userCanComment={discussion.userCanComment}
+                                hideVotes
+                              />
+                            </div>
+                          }
+                        </td>
+                      </tr>
+                    )
+                  }
+                </tbody>
+              </table>
 
-    return (
-      <div data-discussion-id={discussionId}>
-        <Loader
-          loading={data.loading}
-          error={data.error}
-          render={() => {
-            return (
-              <Fragment>
-                <table {...styles.table}>
-                  <tbody>
-                    {comments && comments.nodes
-                      .filter(({ published, adminUnpublished }) => published && !adminUnpublished)
-                      .map((comment, index) =>
-                        <tr key={`comment-${comment.id}`} {...styles.tr}>
-                          <th>
-                            {index + 1}.
-                          </th>
-                          <td>
-                            <Comment
-                              discussion={discussion}
-                              comment={comment}
-                              userCanComment={discussion.userCanComment}
-                            />
-                            {comment.comments && comment.comments.nodes[0] &&
-                              <div {...styles.answer}>
-                                <div {...styles.answerTitle}>{answerTitle || 'Antwort'}</div>
-                                <Comment
-                                  discussion={discussion}
-                                  comment={comment.comments.nodes[0]}
-                                  userCanComment={discussion.userCanComment}
-                                  hideVotes
-                                />
-                              </div>
-                            }
-                          </td>
-                        </tr>
-                      )
-                    }
-                  </tbody>
-                </table>
-
-                {compose && (discussion.closed
-                  ? <p {...styles.newQuestionDeactivated}>
-                    {t('discussion/closed')}
-                  </p>
-                  : me
-                    ? discussion.userCanComment
-                      ? <div style={{ marginTop: 30 }}>
-                        <Composer discussion={discussion} refetch={data.refetch} t={t} />
-                      </div>
-                      : <p>{t('discussion/notEligible')}</p>
-                    : <p>{t('discussion/notSignedIn')}</p>
-                )}
-              </Fragment>
-            )
-          }}
-        />
-      </div>
-    )
-  }
+              {compose && (discussion.closed
+                ? <p {...styles.newQuestionDeactivated}>
+                  {t('discussion/closed')}
+                </p>
+                : me
+                  ? discussion.userCanComment
+                    ? <div style={{ marginTop: 15 }}>
+                      <Composer discussion={discussion} refetch={data.refetch} t={t} />
+                    </div>
+                    : <p>{t('discussion/notEligible')}</p>
+                  : <p>{t('discussion/notSignedIn')}</p>
+              )}
+            </Fragment>
+          )
+        }}
+      />
+    </div>
+  )
 }
 
 export default compose(
