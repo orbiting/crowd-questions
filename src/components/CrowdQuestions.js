@@ -51,11 +51,8 @@ const styles = {
   }),
   tr: css({
     '& th, & td': {
-      paddingTop: 5,
-      paddingBottom: 5
-    },
-    '&:nth-child(even)': {
-      backgroundColor: colors.secondaryBg
+      paddingTop: 10,
+      paddingBottom: 10
     },
     '& td p': {
       ...fontStyles.serifRegular17,
