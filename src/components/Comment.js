@@ -98,7 +98,7 @@ const CrowdQuestionsComment = props => {
                           : unvoteComment(options)
                       ))
                     }
-                    title="+1">
+                    title='+1'>
                     <MdKeyboardArrowUp />
                   </IconButton>
                 )}

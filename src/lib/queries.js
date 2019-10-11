@@ -85,7 +85,7 @@ export const withComments = (defaultProps = {}) => graphql(getDiscussion, {
       }
     }
   },
-  props: ({ data, ownProps }) => ({
+  props: ({ data, ownProps, refetch }) => ({
     data,
     fetchMore: ({ after }) =>
       data.fetchMore({
@@ -172,60 +172,9 @@ export const withSubmitComment =
           discussionDisplayAuthor: displayAuthor
         } = ownProps
 
-        /*
-         * Generate a new UUID for the comment. We do this client-side so that we can
-         * properly handle subscription notifications.
-         */
-        /* const id = uuid()
-        submittedComments.add(id)
-
-        const { parentId, parentIds } = parent
-          ? { parentId: parent.id, parentIds: parent.parentIds.concat(parent.id) }
-          : { parentId: null, parentIds: [] } */
-
         return mutate({
           variables: { discussionId: discussion.id, content, tags }
-          /*
-          optimisticResponse: {
-            __typename: 'Mutation',
-            submitComment: {
-              __typename: 'Comment',
-              id,
-              ...optimisticContent(content),
-              published: true,
-              adminUnpublished: false,
-              userCanEdit: true,
-              downVotes: 0,
-              upVotes: 0,
-              userVote: null,
-              displayAuthor,
-              createdAt: new Date().toISOString(),
-              updatedAt: new Date().toISOString(),
-              parentIds,
-              tags
-            }
-          }, 
-          update: (proxy, { data: { submitComment: comment } }) => {
-            debug('submitComment', comment)
-            const variables = {
-              discussionId,
-              parentId: ownParentId,
-              after: null,
-              orderBy,
-              depth,
-              focusId
-            }
-
-            proxy.writeQuery({
-              query: discussionQuery,
-              variables,
-              data: produce(
-                proxy.readQuery({ query: discussionQuery, variables }),
-                mergeComment({ displayAuthor, comment })
-              )
-            })
-          } */
-        }).catch(e => Promise.reject(errorToString(e.message)))
+        }).catch(e => Promise.reject(errorToString(e)))
       }
     })
   })

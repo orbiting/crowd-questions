@@ -104,7 +104,6 @@ class CrowdQuestions extends Component {
     const { discussion } = data
     const comments = discussion && discussion.comments
 
-
     return (
       <div data-discussion-id={discussionId}>
         <Loader
@@ -117,31 +116,30 @@ class CrowdQuestions extends Component {
                   <tbody>
                     {comments && comments.nodes
                       .filter(({ published, adminUnpublished }) => published && !adminUnpublished)
-                      .map(
-                        (comment, index) =>
-                          <tr key={`comment-${comment.id}`} {...styles.tr}>
-                            <th>
-                              {index + 1}.
-                            </th>
-                            <td>
-                              <Comment
-                                discussion={discussion}
-                                comment={comment}
-                                userCanComment={discussion.userCanComment}
-                              />
-                              {comment.comments && comment.comments.nodes[0] &&
-                                <div {...styles.answer}>
-                                  <div {...styles.answerTitle}>{answerTitle || 'Antwort'}</div>
-                                  <Comment
-                                    discussion={discussion}
-                                    comment={comment.comments.nodes[0]}
-                                    userCanComment={discussion.userCanComment}
-                                    hideVotes
-                                  />
-                                </div>
-                              }
-                            </td>
-                          </tr>
+                      .map((comment, index) =>
+                        <tr key={`comment-${comment.id}`} {...styles.tr}>
+                          <th>
+                            {index + 1}.
+                          </th>
+                          <td>
+                            <Comment
+                              discussion={discussion}
+                              comment={comment}
+                              userCanComment={discussion.userCanComment}
+                            />
+                            {comment.comments && comment.comments.nodes[0] &&
+                              <div {...styles.answer}>
+                                <div {...styles.answerTitle}>{answerTitle || 'Antwort'}</div>
+                                <Comment
+                                  discussion={discussion}
+                                  comment={comment.comments.nodes[0]}
+                                  userCanComment={discussion.userCanComment}
+                                  hideVotes
+                                />
+                              </div>
+                            }
+                          </td>
+                        </tr>
                       )
                     }
                   </tbody>
@@ -153,8 +151,8 @@ class CrowdQuestions extends Component {
                   </p>
                   : me
                     ? discussion.userCanComment
-                      ? <div style={{ marginTop: 10 }}>
-                        <Composer discussion={discussion} t={t} />
+                      ? <div style={{ marginTop: 30 }}>
+                        <Composer discussion={discussion} refetch={data.refetch} t={t} />
                       </div>
                       : <p>{t('discussion/notEligible')}</p>
                     : <p>{t('discussion/notSignedIn')}</p>
@@ -172,6 +170,6 @@ export default compose(
   withMembership,
   withComments({
     orderBy: 'VOTES',
-    first: 100
+    first: 500
   })
 )(CrowdQuestions)

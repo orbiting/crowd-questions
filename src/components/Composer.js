@@ -11,7 +11,7 @@ import {
 import { withSubmitComment } from '../lib/queries'
 
 const Composer = props => {
-  const { discussion, t } = props
+  const { discussion, t, refetch } = props
 
   /*
    * isActive: true if we show the CommentComposer, false if we show the CommentComposerPlaceholder.
@@ -23,6 +23,7 @@ const Composer = props => {
     props.submitComment(text, tags).then(
       () => {
         setActive(false)
+        refetch()
         return { ok: true }
       },
       error => ({ error: `${error}` })
@@ -54,15 +55,12 @@ const Composer = props => {
           onSubmitLabel={t('styleguide/CommentComposer/answer')} />
       </DiscussionContext.Provider>
     )
-  } else {
-    return (
-      <CommentComposerPlaceholder
-        t={t}
-        displayAuthor={{} /* impersonal format */ }
-        onClick={() => { setActive(true) }}
-      />
-    )
-  }
+  } 
+  return <CommentComposerPlaceholder
+    t={t}
+    displayAuthor={{} /* impersonal format */ }
+    onClick={() => { setActive(true) }}
+  />
 }
 
 export default withSubmitComment(Composer)
