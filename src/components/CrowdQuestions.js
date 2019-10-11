@@ -69,7 +69,7 @@ const styles = {
       [mediaQueries.mUp]: {
         ...fontStyles.serifRegular19,
         ...fontStyles.sansSerifMedium,
-        fontSize: 15
+        fontSize: 17
       },
       textAlign: 'right',
       paddingRight: 5
