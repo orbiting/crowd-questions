@@ -11,9 +11,9 @@ import {
 } from '@project-r/styleguide'
 import Comment from './Comment'
 import Composer from './Composer'
-import { withMembership } from './Auth/checkRoles'
 
 import { withComments } from '../lib/queries'
+import withMe from '../lib/withMe'
 
 const styles = {
   newQuestionDeactivated: css({
@@ -100,7 +100,7 @@ class CrowdQuestions extends Component {
 
   render () {
     const { t } = this
-    const { answerTitle, discussionId, compose = true, focusId = null, data, me, isMember } = this.props
+    const { answerTitle, discussionId, compose = true, focusId = null, data, me } = this.props
     const { discussion } = data
     const comments = discussion && discussion.comments
 
@@ -167,7 +167,7 @@ class CrowdQuestions extends Component {
 }
 
 export default compose(
-  withMembership,
+  withMe,
   withComments({
     orderBy: 'VOTES',
     first: 500
