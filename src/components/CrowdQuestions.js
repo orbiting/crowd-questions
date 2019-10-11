@@ -38,7 +38,6 @@ const styles = {
   answer: css({
     paddingTop: 10,
     paddingRight: 75,
-    paddingBottom: 10,
     paddingLeft: 10
   }),
   answerTitle: css({
@@ -51,7 +50,10 @@ const styles = {
     paddingRight: 0
   }),
   tr: css({
-    marginBottom: 3,
+    '& th, & td': {
+      paddingTop: 5,
+      paddingBottom: 5
+    },
     '&:nth-child(even)': {
       backgroundColor: colors.secondaryBg
     },
@@ -152,7 +154,7 @@ const CrowdQuestions = (props) => {
                 </p>
                 : me
                   ? discussion.userCanComment
-                    ? <div style={{ marginTop: 15 }}>
+                    ? <div style={{ marginTop: 30 }}>
                       <Composer discussion={discussion} refetch={data.refetch} t={t} />
                     </div>
                     : <p>{t('discussion/notEligible')}</p>
