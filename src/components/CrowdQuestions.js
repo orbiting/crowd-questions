@@ -63,13 +63,13 @@ const styles = {
     '& th': css({
       width: 20,
       verticalAlign: 'top',
-      ...fontStyles.serifRegular17,
       ...fontStyles.sansSerifMedium,
       fontSize: 15,
+      lineHeight: '26px',
       [mediaQueries.mUp]: {
-        ...fontStyles.serifRegular19,
         ...fontStyles.sansSerifMedium,
-        fontSize: 17
+        fontSize: 17,
+        lineHeight: '29px'
       },
       textAlign: 'right',
       paddingRight: 5
