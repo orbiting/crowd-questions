@@ -36,10 +36,10 @@ const styles = {
     marginBottom: 5
   }),
   answer: css({
-    paddingTop: 20,
-    paddingRight: 60,
-    paddingBottom: 20,
-    paddingLeft: 40,
+    paddingTop: 10,
+    paddingRight: 75,
+    paddingBottom: 10,
+    paddingLeft: 10
   }),
   answerTitle: css({
     ...fontStyles.sansSerifMedium16,
@@ -131,12 +131,12 @@ class CrowdQuestions extends Component {
                               />
                               {comment.comments && comment.comments.nodes[0] &&
                                 <div {...styles.answer}>
-                                  <div {...styles.answerTitle}>{answerTitle}</div>
+                                  <div {...styles.answerTitle}>{answerTitle || 'Antwort'}</div>
                                   <Comment
                                     discussion={discussion}
                                     comment={comment.comments.nodes[0]}
                                     userCanComment={discussion.userCanComment}
-                                    hideVotes={true}
+                                    hideVotes
                                   />
                                 </div>
                               }

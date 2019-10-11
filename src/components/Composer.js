@@ -58,7 +58,7 @@ const Composer = props => {
     return (
       <CommentComposerPlaceholder
         t={t}
-        displayAuthor={discussion.displayAuthor}
+        displayAuthor={{} /* impersonal format */ }
         onClick={() => { setActive(true) }}
       />
     )
