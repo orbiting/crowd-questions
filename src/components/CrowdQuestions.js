@@ -133,7 +133,7 @@ const CrowdQuestions = (props) => {
                     .filter(({ published, adminUnpublished }) => published && !adminUnpublished)
                     .map((comment, index) =>
                       <tr key={`comment-${comment.id}`} {...styles.tr}>
-                        <th style={{ width: Math.ceil(String(index + 1).length * 10.6 + 9.6) }}>
+                        <th style={{ width: Math.ceil(String(index + 1).length * 10.6 + 11) }}>
                           {index + 1}.
                         </th>
                         <td>
