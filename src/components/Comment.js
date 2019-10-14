@@ -56,7 +56,7 @@ const IconButton = ({ iconSize, onClick, disabled, title, children }) => (
       cursor: onClick ? undefined : 'inherit',
       color: disabled ? colors.disabled : undefined
     }}
-    onClick={onClick}>
+    onClick={onClick ? onClick : undefined}>
     {children}
   </button>
 )
