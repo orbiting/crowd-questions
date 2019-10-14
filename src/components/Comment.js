@@ -56,7 +56,7 @@ const IconButton = ({ iconSize, onClick, disabled, title, children }) => (
       cursor: onClick ? undefined : 'inherit',
       color: disabled ? colors.disabled : undefined
     }}
-    onClick={onClick ? onClick : undefined}>
+    onClick={onClick}>
     {children}
   </button>
 )
@@ -95,11 +95,11 @@ const CrowdQuestionsComment = props => {
                   <IconButton
                     disabled={!userCanVote || userVote === 'UP'}
                     onClick={
-                      userCanVote && (() => (
+                      userCanVote ? (() => (
                         userVote !== 'UP'
                           ? voteComment(options)
                           : unvoteComment(options)
-                      ))
+                      )) : undefined
                     }
                     title='+1'>
                     <MdKeyboardArrowUp />
@@ -116,11 +116,11 @@ const CrowdQuestionsComment = props => {
                   <IconButton
                     disabled={!userCanVote || userVote === 'DOWN'}
                     onClick={
-                      userCanVote && (() => (
+                      userCanVote ? (() => (
                         userVote !== 'DOWN'
                           ? voteComment(options)
                           : unvoteComment(options)
-                      ))
+                      )) : undefined
                     }
                     title='-1'>
                     <MdKeyboardArrowDown />
