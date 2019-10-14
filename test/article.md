@@ -68,6 +68,26 @@ Was möchten Sie Fragen?
 
 <hr /></section>
 
+## Archiv
+
+Ursprüngliche Vorschläge werden hier archiviert. Die von uns zusammengefasste Version finden Sie in der ersten Liste.
+
+<section><h6>DYNAMIC_COMPONENT</h6>
+
+```
+{
+  "autoHtml": false,
+  "props": {
+    "discussionId": "0e4ac465-2d39-4854-a5ec-31c8e8a0639b",
+    "compose": false,
+    "vote": false
+  },
+  "src": "https://cdn.republik.space/s3/republik-assets/dynamic-components/crowd-questions/index.js"
+}
+```
+
+<hr /></section>
+
 Hier geht die Geschichte weiter.
 
 <hr /></section>

@@ -28,7 +28,7 @@
     "@babel/preset-env": "^7.6.2",
     "@babel/preset-react": "^7.0.0",
     "@orbiting/remark-preset": "^1.2.4",
-    "@project-r/styleguide": "^8.5.2",
+    "@project-r/styleguide": "^8.6.1",
     "apollo-cache-inmemory": "^1.6.3",
     "apollo-client": "^2.6.4",
     "apollo-link": "^1.2.13",

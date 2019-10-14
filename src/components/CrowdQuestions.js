@@ -7,7 +7,8 @@ import {
   Loader,
   Dropdown,
   mediaQueries,
-  createFormatter
+  createFormatter,
+  pxToRem
 } from '@project-r/styleguide'
 import Comment from './Comment'
 import Composer from './Composer'
@@ -17,14 +18,18 @@ import withMe from '../lib/withMe'
 
 const styles = {
   newQuestionDeactivated: css({
-    ...fontStyles.sansSerifRegular16,
+    ...fontStyles.sansSerifRegular,
+    fontSize: pxToRem(16),
+    lineHeight: pxToRem(25),
     border: 'none',
     padding: '0',
     display: 'block',
     marginBottom: 5
   }),
   newQuestion: css({
-    ...fontStyles.sansSerifRegular16,
+    ...fontStyles.sansSerifRegular,
+    fontSize: pxToRem(16),
+    lineHeight: pxToRem(25),
     outline: 'none',
     color: colors.primary,
     WebkitAppearance: 'none',
@@ -41,13 +46,18 @@ const styles = {
     paddingLeft: 10
   }),
   answerTitle: css({
-    ...fontStyles.sansSerifMedium16,
+    ...fontStyles.sansSerifMedium,
+    fontSize: pxToRem(16),
+    lineHeight: pxToRem(25)
   }),
   table: css({
     width: '100%',
     borderSpacing: '0',
     paddingLeft: 0,
-    paddingRight: 0
+    paddingRight: 0,
+    overflow: 'hidden',
+    tableLayout: 'fixed',
+    wordWrap: 'break-word'
   }),
   tr: css({
     '& th, & td': {
@@ -55,21 +65,25 @@ const styles = {
       paddingBottom: 10
     },
     '& td p': {
-      ...fontStyles.serifRegular17,
+      ...fontStyles.sansSerif,
+      fontSize: pxToRem(17),
+      lineHeight: pxToRem(26),
       [mediaQueries.mUp]: {
-        ...fontStyles.serifRegular19
+        ...fontStyles.sansSerif,
+        fontSize: pxToRem(19),
+        lineHeight: pxToRem(30),
       }
     },
     '& th': css({
       width: 20,
       verticalAlign: 'top',
       ...fontStyles.sansSerifMedium,
-      fontSize: 15,
-      lineHeight: '26px',
+      fontSize: pxToRem(15),
+      lineHeight: pxToRem(26),
       [mediaQueries.mUp]: {
         ...fontStyles.sansSerifMedium,
-        fontSize: 17,
-        lineHeight: '29px'
+        fontSize: pxToRem(17),
+        lineHeight: pxToRem(29)
       },
       textAlign: 'right',
       paddingRight: 5
@@ -88,7 +102,7 @@ const CrowdQuestions = (props) => {
     [props.translations]
   )
 
-  const { answerTitle, discussionId, compose = true, focusId = null, data, me } = props
+  const { answerTitle, discussionId, compose = true, vote = true, focusId = null, data, me } = props
   const { discussion } = data
   const comments = discussion && discussion.comments
 
@@ -125,6 +139,7 @@ const CrowdQuestions = (props) => {
                           <Comment
                             discussion={discussion}
                             comment={comment}
+                            vote={vote}
                             userCanComment={discussion.userCanComment}
                           />
                           {comment.comments && comment.comments.nodes[0] &&

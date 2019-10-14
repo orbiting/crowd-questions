@@ -67,6 +67,7 @@ const CrowdQuestionsComment = props => {
     comment,
     userCanComment,
     submitHandler,
+    vote = true,
     hideVotes = false
   } = props
   const {
@@ -81,6 +82,8 @@ const CrowdQuestionsComment = props => {
     variables: { commentId }
   }
 
+  const userCanVote = userCanComment && !discussion.closed && vote
+
   return (
     <div {...styles.wrapper}>
       {!hideVotes && <span {...styles.rightActions}>
@@ -90,9 +93,9 @@ const CrowdQuestionsComment = props => {
               <Mutation mutation={upvoteCommentQuery}>
                 {voteComment => (
                   <IconButton
-                    disabled={!userCanComment || discussion.closed || userVote === 'UP'}
+                    disabled={!userCanVote || userVote === 'UP'}
                     onClick={
-                      userCanComment && !discussion.closed && (() => (
+                      userCanVote && (() => (
                         userVote !== 'UP'
                           ? voteComment(options)
                           : unvoteComment(options)
@@ -111,9 +114,9 @@ const CrowdQuestionsComment = props => {
               <Mutation mutation={downvoteCommentQuery}>
                 {voteComment => (
                   <IconButton
-                    disabled={!userCanComment || discussion.closed || userVote === 'DOWN'}
+                    disabled={!userCanVote || userVote === 'DOWN'}
                     onClick={
-                      userCanComment && !discussion.closed && (() => (
+                      userCanVote && (() => (
                         userVote !== 'DOWN'
                           ? voteComment(options)
                           : unvoteComment(options)
