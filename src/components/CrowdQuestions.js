@@ -86,7 +86,8 @@ const styles = {
         lineHeight: pxToRem(29)
       },
       textAlign: 'right',
-      paddingRight: 5
+      paddingRight: 5,
+      fontFeatureSettings: '"tnum" 1, "kern" 1'
     })
   })
 }
@@ -132,7 +133,7 @@ const CrowdQuestions = (props) => {
                     .filter(({ published, adminUnpublished }) => published && !adminUnpublished)
                     .map((comment, index) =>
                       <tr key={`comment-${comment.id}`} {...styles.tr}>
-                        <th>
+                        <th style={{ width: String(index + 1).length * 10 + 10 }}>
                           {index + 1}.
                         </th>
                         <td>

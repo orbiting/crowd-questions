@@ -1,4 +1,5 @@
 import React from 'react'
+import { css } from 'glamor'
 
 import { parse } from '@orbiting/remark-preset'
 import createSchema from '@project-r/styleguide/lib/templates/Article'
@@ -20,6 +21,9 @@ const schema = createSchema({
   })
 })
 const mdast = parse(md)
+
+css.global('html', { boxSizing: 'border-box' })
+css.global('*, *:before, *:after', { boxSizing: 'inherit' })
 
 export default withRouter(({ router }) => {
   return (
