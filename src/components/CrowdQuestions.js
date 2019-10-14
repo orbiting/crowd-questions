@@ -119,6 +119,10 @@ const CrowdQuestions = (props) => {
     [discussion]
   )
 
+  const rows = comments && comments.nodes.filter(
+    ({ published, adminUnpublished }) => published && !adminUnpublished
+  )
+
   return (
     <div data-discussion-id={discussionId}>
       <Loader
@@ -129,35 +133,32 @@ const CrowdQuestions = (props) => {
             <Fragment>
               <table {...styles.table}>
                 <tbody>
-                  {comments && comments.nodes
-                    .filter(({ published, adminUnpublished }) => published && !adminUnpublished)
-                    .map((comment, index) =>
-                      <tr key={`comment-${comment.id}`} {...styles.tr}>
-                        <th style={{ width: Math.ceil(String(index + 1).length * 10.6 + 11) }}>
-                          {index + 1}.
-                        </th>
-                        <td>
-                          <Comment
-                            discussion={discussion}
-                            comment={comment}
-                            vote={vote}
-                            userCanComment={discussion.userCanComment}
-                          />
-                          {comment.comments && comment.comments.nodes[0] &&
-                            <div {...styles.answer}>
-                              <div {...styles.answerTitle}>{answerTitle || 'Antwort'}</div>
-                              <Comment
-                                discussion={discussion}
-                                comment={comment.comments.nodes[0]}
-                                userCanComment={discussion.userCanComment}
-                                hideVotes
-                              />
-                            </div>
-                          }
-                        </td>
-                      </tr>
-                    )
-                  }
+                  {rows.map((comment, index) =>
+                    <tr key={`comment-${comment.id}`} {...styles.tr}>
+                      <th style={{ width: Math.ceil(String(rows.length).length * 10.6 + 11) }}>
+                        {index + 1}.
+                      </th>
+                      <td>
+                        <Comment
+                          discussion={discussion}
+                          comment={comment}
+                          vote={vote}
+                          userCanComment={discussion.userCanComment}
+                        />
+                        {comment.comments && comment.comments.nodes[0] &&
+                          <div {...styles.answer}>
+                            <div {...styles.answerTitle}>{answerTitle || 'Antwort'}</div>
+                            <Comment
+                              discussion={discussion}
+                              comment={comment.comments.nodes[0]}
+                              userCanComment={discussion.userCanComment}
+                              hideVotes
+                            />
+                          </div>
+                        }
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
 
