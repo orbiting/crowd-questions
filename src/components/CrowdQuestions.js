@@ -56,8 +56,7 @@ const styles = {
     paddingLeft: 0,
     paddingRight: 0,
     overflow: 'hidden',
-    tableLayout: 'fixed',
-    wordWrap: 'break-word'
+    tableLayout: 'fixed'
   }),
   tr: css({
     '& th, & td': {
@@ -65,6 +64,7 @@ const styles = {
       paddingBottom: 10
     },
     '& td p': {
+      wordWrap: 'break-word',
       ...fontStyles.sansSerif,
       fontSize: pxToRem(17),
       lineHeight: pxToRem(26),
